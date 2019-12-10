@@ -18,13 +18,16 @@ class Controller
     }
 
     // Load View
-     public function view($view, $data = []) {
+    public function view($view, $data = []) {
         $view = $this->parseViewPath($view);
         if (file_exists(APPROOT . 'views' . DS . $view . '.php')) {
             require_once APPROOT . 'views' . DS . $view . '.php';
         } else {
-            // If View Not Exist
-            die('404 Page Not Found!');
+            // View Not Exist
+            if (APPENV === 'DEV') {
+                die('View does not exist!');
+            }
+            $this->view('404');
         }
     }
 

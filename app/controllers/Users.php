@@ -6,17 +6,17 @@ class Users extends Controller
         $this->model('User');
     }
 
-    public function profile($id = '') {
+    // public function profile($id = '') {
 
-        if (isUserLogged()) {
-            $user = $this->model->getUser($id);
-            $data = ['user' => $user];
-            $user ?  $this->view('users.profile', $data) : $this->view('404');
-        } else {
-            flash('msg', 'Login to able to see this profile.', 'danger');
-            redirect('users.login');
-        }
-    }
+    //     if (isUserLogged()) {
+    //         $user = $this->model->getUser($id);
+    //         $data = ['user' => $user];
+    //         $user ?  $this->view('users.profile', $data) : $this->view('404');
+    //     } else {
+    //         flash('msg', 'Login to able to see this profile.', 'danger');
+    //         redirect('users.login');
+    //     }
+    // }
 
     public function login() {
         // page date
@@ -46,7 +46,7 @@ class Users extends Controller
                 $logged = $this->model->login($data['email'], $data['password']);
                 if ($logged) {
                     $this->createUserSession($logged);
-                    redirect('pages');
+                    redirect('home');
                 } else {
                     $data['password_err'] = 'Password Incorrect.';
                     $this->view('users.login', $data);
@@ -59,7 +59,7 @@ class Users extends Controller
 
             // Redirect if user logged in
             if (isUserLogged()) {
-                redirect('posts.index');
+                redirect('home');
             } else {
                 $data = [
                     'email'  => '',
@@ -99,7 +99,7 @@ class Users extends Controller
                 $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
                
                 if ($this->model->register($data)) {
-                    flash('msg', 'You are now registered! You can login :)');
+                    flash('msg', 'You are registered! Login Now.');
                     redirect('users.login');
                 } else {
                     if (APPENV === 'DEV') {
@@ -115,7 +115,7 @@ class Users extends Controller
         } else {
             // Redirect if user logged in
             if (isUserLogged()) { 
-                redirect('posts.index');
+                redirect('home.index');
             } else { 
                 $data = [
                     'name'  => '',
