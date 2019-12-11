@@ -4,6 +4,7 @@
     <div class="col-md-4 m-auto shadow-sm border rounded">
         <?php flash('msg'); ?>
         <form class="form-signin mt-3" method="POST">
+
             <div class="form-group">
                 <input type="email" class="form-control <?= !empty($data['email_err']) ? 'is-invalid' : '';?>" name="email" value="<?=$data['email']?>" placeholder="Email address">
                 <span class="text-left invalid-feedback"><?=$data['email_err']?></span>

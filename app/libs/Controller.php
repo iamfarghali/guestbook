@@ -19,6 +19,9 @@ class Controller
 
     // Load View
     public function view($view, $data = []) {
+        
+        extract($data);
+
         $view = $this->parseViewPath($view);
         if (file_exists(APPROOT . 'views' . DS . $view . '.php')) {
             require_once APPROOT . 'views' . DS . $view . '.php';
