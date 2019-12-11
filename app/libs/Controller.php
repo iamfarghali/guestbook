@@ -10,7 +10,7 @@ class Controller
 
         if (file_exists(APPROOT . 'models' . DS . $m . '.php')) {
             require_once APPROOT . 'models' . DS . $m . '.php';
-            $this->model =  new $m();
+            $this->model = new $m();
         }
 
         // If Model Not Exist

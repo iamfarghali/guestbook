@@ -1,6 +1,6 @@
 <?php require_once APPROOT.'views'.DS.'inc'.DS.'header.php'; ?>
 
-<div class="row mt-5">
+<div class="row h-50 mt-5">
     <div class="col-md-4 m-auto shadow-sm border rounded">
         <form class="form-signin mt-3" method="POST">
             <div class="form-group">

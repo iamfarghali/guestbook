@@ -11,6 +11,12 @@
             <p><?= htmlspecialchars_decode($message->message) ?></p>
             <div class="d-flex justify-content-between mx-2 sm-font">
                 <span class="message-owner"><?=$message->name?></span>
+                <?php
+                    if ($isMessageOwner) { ?>
+                        <span><a class="text-info" href="<?=APPURL.'messages'.DS.'edit'.DS.$message->id?>">Edit</a></span>
+                        <span><a class="text-danger" href="<?=APPURL.'messages'.DS.'delete'.DS.$message->id?>">Delete</a></span>
+                    <?php }
+                ?>
                 <span><a href="<?=APPURL.'messages'.DS.'reply'.DS.$message->id.DS.$message->id?>">Reply </a></span>
             </div>
         </div>

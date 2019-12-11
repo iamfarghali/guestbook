@@ -7,20 +7,28 @@ class Users extends Controller
         $this->model('User');
     }
 
-    // public function profile($id = '') {
+    public function profile($id = null) {
 
-    //     if (isUserLogged()) {
-    //         $user = $this->model->getUser($id);
-    //         $data = ['user' => $user];
-    //         $user ?  $this->view('users.profile', $data) : $this->view('404');
-    //     } else {
-    //         flash('msg', 'Login to able to see this profile.', 'danger');
-    //         redirect('users.login');
-    //     }
-    // }
+        if (isUserLogged()) {
+            if ($id == $_SESSION['user_id']) {
+                $user = $this->model->getUser($id);
+    
+                $this->model('Message');
+                $messages = $this->model->getUserMessages($id);
+    
+                $user ? $this->view('users.profile', ['user' => $user, 'messages' => $messages]) : $this->view('404');
+            } else {
+                flash('msg', 'You can see only your profile.', 'warning');
+                redirect('home');
+            }
+        } else {
+            flash('msg', 'You need to login.', 'danger');
+            redirect('users.login');
+        }
+    }
 
     public function login() {
-        // page date
+        // page data
         $data = [];
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {

@@ -15,3 +15,30 @@
 <body>
     <!-- Start Main Container -->
     <main class="container mb-5">
+        <?php if (isUserlogged()): ?>
+            <header>
+                <nav class="navbar navbar-expand-md">
+
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a class="nav-link text-muted" href="<?= APPURL ?>">Home</a>
+                        </li>
+        
+                        <li class="nav-item">
+                            <a class="nav-link text-muted" href="<?= APPURL.'users'.DS.'profile'.DS.$_SESSION['user_id'] ?>">Profile</a>
+                        </li>
+
+                    </ul>
+                                
+                    <ul class="navbar-nav ml-auto">  
+                        <li class="nav-item">
+                            <span class="nav-link text-dark"><?=$_SESSION['user_name']?></span>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link text-muted" href="<?=APPURL.'users'.DS.'logout'?>">Logout</a>
+                        </li>
+                    </ul>
+                </nav>
+            </header>
+        <?php endif; ?>

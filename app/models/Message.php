@@ -41,7 +41,10 @@ class Message
 
     public function getMessage($id)
     {
-        $this->_db->query("SELECT * FROM $this->_table WHERE id = :id");
+        $this->_db->query("
+                        SELECT * FROM $this->_table
+                        WHERE id = :id");
+
         $this->_db->bind(':id', $id);
         return $this->_db->one();
         
@@ -73,10 +76,75 @@ class Message
                         From cte_message cte_m
                         LEFT JOIN users u
                         ON cte_m.user_id = u.id 
-                        ORDER BY message_parent_id ASC;
+                        ORDER BY message_parent_id ASC
                     ");
+                    
         $this->_db->bind(':id', $id);
         return $this->_db->getAll();
         
     }
+
+    public function getMessages() {
+        $this->_db->query("
+                    SELECT m.*,
+                           u.id as uId, u.name 
+                    FROM $this->_table m
+                    LEFT JOIN users u
+                    ON m.user_id = u.id 
+                    WHERE message_parent_id = 0
+                    ORDER BY created_at DESC
+                ");
+        return $this->_db->getAll();
+    }
+
+    public function getUserMessages($id) {
+        $this->_db->query("
+                    SELECT m.*,
+                           u.id as uId, u.name 
+                    FROM $this->_table m
+                    LEFT JOIN users u
+                    ON m.user_id = u.id 
+                    WHERE m.user_id = :id AND message_parent_id = 0
+                    ORDER BY created_at DESC
+                ");
+        $this->_db->bind(':id', $id);
+        return $this->_db->getAll();
+    }
+
+    public function updateMessage($id, $message) {
+
+        $this->_db->query("
+            UPDATE $this->_table
+            SET message = :msg
+            WHERE id = :id
+        ");
+        
+        $this->_db->bind(':msg', $message);
+        $this->_db->bind(':id', $id);
+        $this->_db->execute();
+    }
+
+    public function deleteMessage($id) {
+
+        $this->_db->query("
+            DELETE FROM messages WHERE id IN (
+                WITH RECURSIVE cte_message AS (
+                    SELECT id
+                    From guestbook.messages
+                    WHERE id = :id
+                    UNION ALL
+                    SELECT m.id
+                    FROM guestbook.messages m, cte_message cm
+                    WHERE
+                        cm.id = m.message_parent_id
+                )
+                SELECT * From cte_message
+            )
+        ");
+        
+        $this->_db->bind(':id', $id);
+        $this->_db->execute();
+    }
+
+
 }   
