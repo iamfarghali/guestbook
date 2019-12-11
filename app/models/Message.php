@@ -24,6 +24,21 @@ class Message
         return $this->_db->execute();
     }
 
+    public function addReply($data, $id) {
+        $this->_db->query("
+                        INSERT INTO $this->_table
+                        (message_parent_id, user_id, message)
+                        VALUES
+                        (:pId, :uId, :msg)
+                    ");
+
+        $this->_db->bind(':pId', $id);
+        $this->_db->bind(':uId', $data['user_id']);
+        $this->_db->bind(':msg', $data['message']);
+
+        return $this->_db->execute();
+    }
+
     public function getMessage($id)
     {
         $this->_db->query("SELECT * FROM $this->_table WHERE id = :id");

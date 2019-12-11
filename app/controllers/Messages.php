@@ -11,7 +11,7 @@ class Messages extends Controller
     }
 
     public function message($id) {
-        
+
         // Get message with its replies
         $data = $this->model->getMessageWithReplies($id);
 
@@ -59,11 +59,11 @@ class Messages extends Controller
             // Get data
             $data = $_POST;
             $data = sanitize($data);
-
+           
             // Check if message is empty
             if (empty($data['message'])):
                 $data['message_err'] = 'Plaese write a message.';
-            elseif (strlen($data['message']) <= 30):
+            elseif (strlen($data['message']) <= 20):
                 $data['message_err'] = 'message must be more than 30 characters.';
             else:
                 $data['message_err'] = '';
@@ -72,15 +72,38 @@ class Messages extends Controller
             // Store Or Back with errors
             if (empty($data['message_err'])):
                 $data['user_id'] = $_SESSION['user_id'];
-                $this->model->addMessage($data);
-                flash('msg', 'Message is Added Successfully!');
-                redirect('messages');
+
+                // Choose If Message Or Reply [Store]
+                if (!isset($data['replyId'])):
+                    $this->model->addMessage($data);
+                    flash('msg', 'Message is Added Successfully!');
+                    redirect('messages');
+                else:
+                    $this->model->addReply($data, $data['replyId']);
+                    $msgId = $data['msgId'];
+                    flash('msg', 'Reply is Added Successfully!');
+                    redirect("messages.message.$msgId");
+                endif;
+
             else:
-                $this->view('messages.index', ['data' => $data]);
+                // Choose If Message Or Reply [Back]
+                if (!isset($data['replyId'])):
+                    $this->view('messages.index', ['data' => $data]);
+                else:
+                    $this->view('messages.reply', ['data' => $data]);
+                endif;
+                    
             endif;
+
         else:
             redirect('users.login');
         endif;
+    }
+
+    public function reply($id, $msgId) {
+        $data['replyId'] = $id; 
+        $data['msgId'] = $msgId;
+        $this->view('messages.reply', ['data' => $data]);
     }
 
 

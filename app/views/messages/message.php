@@ -2,37 +2,39 @@
 
 <div class="row mt-5">
     <div class="col-10 mx-auto">
+        <!-- Show Message  -->
+        <?php flash('msg'); ?>
+
         <!-- Main Message  -->
-        <?php
-            
-        // echo '<pre>';
-        // print_r($data);
-        // // print_r($data);
-        // die;
-        ?>
-        <div class="message px-3 py-4 mb-4">
+        <div class="message px-3 py-4">
             <h5 class="text-muted">Message</h5>
             <p><?= htmlspecialchars_decode($message->message) ?></p>
-            <div class="d-flex justify-content-between">
-                <div class="message-owner"><?=$message->name?></div>
-                <div class=""><?=$message->id?></div>
-                <div class="created-at"><?=$message->created_at?></div>
+            <div class="d-flex justify-content-between mx-2 sm-font">
+                <span class="message-owner"><?=$message->name?></span>
+                <span><a href="<?=APPURL.'messages'.DS.'reply'.DS.$message->id.DS.$message->id?>">Reply </a></span>
             </div>
         </div>
 
-        <?php 
-            foreach($message->replies as $reply) { ?>
+        <!-- Replies  -->
+        <div class="replies">
+            <?php 
+                foreach($message->replies as $reply) { ?>
 
-                <div class="reply p-2 mx-2 mb-3">
-                    <p class="mr-4 ml-1"><?= htmlspecialchars_decode($reply->message) ?></p>
-                    <div class="d-flex justify-content-between mt-2">
-                        <div class=""><?=$reply->id?></div>
-                        <div class="message-owner"><?=$reply->name?></div>
+                    <div class="reply p-2 mx-1 mt-3 mb-0">
+                        <p class="mr-4 ml-1"><?= htmlspecialchars_decode($reply->message) ?></p>
+                        <div class="d-flex justify-content-between mx-2 sm-font">
+                            <span class="message-owner"><?=$reply->name?></span>
+                            <span><a href="<?=APPURL.'messages'.DS.'reply'.DS.$reply->id.DS.$message->id?>">Reply </a></span>
+                        </div>
+                        <div>
+                            <?=generateRepliesInHtml($reply->replies, $message->id);?>
+                        </div>
                     </div>
-                </div>
 
-            <?php } 
-        ?>
+                <?php } 
+            ?>
+        </div>
+
     </div>
 </div>
 
