@@ -2,13 +2,10 @@
 // Load Config
 require_once 'config/Config.php';
 
-// Load data filter functions
-require_once APPROOT.'helper'.DS.'filter_data_fn.php';
-
 // Load url functions
-require_once APPROOT.'helper'.DS.'url_fn.php';
+require_once APPROOT.'helper'.DS.'helper_fns.php';
 
-// Load session functions
+// Start session && Load session functions
 require_once APPROOT.'helper'.DS.'session_fn.php';
 
 // Autoloading classes

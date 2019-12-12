@@ -39,11 +39,14 @@
                             <?php
                                foreach($messages as $message) { ?>
                                     <div class="col-4">
-                                        <div class="message px-3 py-4">
-                                            <p><?= htmlspecialchars_decode(substr($message->message, 0, 75)) ?></p>
+                                        <div class="message px-3 py-4 text-left">
+                                            <?php if ($message->new_reply_num > 0 && $message->user_id == $_SESSION['user_id']) { ?>
+                                                <span class="notify"><?=$message->new_reply_num?></span>
+                                            <?php } ?>
+                                            <p><?= htmlspecialchars_decode(substr($message->message, 0, 80)) ?>...</p>
                                             <div class="d-flex justify-content-between mx-2 sm-font">
                                                 <span class="message-owner"><?=$message->name?></span>
-                                                <span><a href="<?=APPURL.'messages'.DS.'message'.DS.$message->id?>">Read more .. </a></span>
+                                                <span><a href="<?=APPURL.'messages'.DS.'message'.DS.$message->id?>">Read more ..</a></span>
                                             </div>
                                         </div>
                                     </div>

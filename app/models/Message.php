@@ -146,5 +146,27 @@ class Message
         $this->_db->execute();
     }
 
+    public function increaseReplyNumByOne($msgId) {
+
+        $this->_db->query("
+            UPDATE $this->_table
+            SET new_reply_num = new_reply_num + 1
+            WHERE id = :msgId
+        ");
+        $this->_db->bind(':msgId', $msgId);
+        $this->_db->execute();
+    }
+
+    public function repliesHadSeen($msgId) {
+
+        $this->_db->query("
+            UPDATE $this->_table
+            SET new_reply_num = 0
+            WHERE id = :msgId
+        ");
+        $this->_db->bind(':msgId', $msgId);
+        $this->_db->execute();
+    }
+
 
 }   

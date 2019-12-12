@@ -18,8 +18,13 @@ class Messages extends Controller
         if (!empty($data) && $data[0]->message_parent_id == 0) {
 
             $message = $data[0];
-            $isMessageOwner = $message->user_id == $_SESSION['user_id'] ? true : false;
             $message->replies = [];
+            $isMessageOwner = $message->user_id == $_SESSION['user_id'] ? true : false;
+
+            // To change new_reply_num column to 0 that mean reply had seen 
+            if ($isMessageOwner) {
+                $this->model->repliesHadSeen($id);
+            }
 
             foreach($data as $item) {
                 if ($item->message_parent_id == $message->id) {
@@ -62,12 +67,22 @@ class Messages extends Controller
 
                 // Choose If Message Or Reply [Store]
                 if (!isset($data['replyId'])):
+                    // Add new message
                     $this->model->addMessage($data);
                     flash('msg', 'Message is Added Successfully!');
                     redirect('home');
                 else:
-                    $this->model->addReply($data, $data['replyId']);
                     $msgId = $data['msgId'];
+                    $message = $this->model->getMessage($msgId); 
+
+                    // Add new reply
+                    $this->model->addReply($data, $data['replyId']);
+
+                    // Increase count of new_reply_num by one
+                    if ($message->user_id != $_SESSION['user_id']) {
+                        $this->model->increaseReplyNumByOne($msgId);
+                    }
+
                     flash('msg', 'Reply is Added Successfully!');
                     redirect("messages.message.$msgId");
                 endif;
